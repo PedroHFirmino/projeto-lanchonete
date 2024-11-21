@@ -1,12 +1,12 @@
 package pedro.firmino.lanches.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.boot.autoconfigure.pulsar.PulsarProperties;
+import org.springframework.web.bind.annotation.*;
+import pedro.firmino.lanches.dto.clienteRequestDto;
 import pedro.firmino.lanches.model.cliente;
 import pedro.firmino.lanches.repository.clienteRepository;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +27,16 @@ public class clienteController {
     public cliente findById(@PathVariable Integer id) {
         return this.repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
+    }
+
+    @PostMapping
+    public cliente save(@RequestBody clienteRequestDto dto) {
+        cliente cliente = new cliente();
+        cliente.setNome(dto.nome());
+        cliente.setEmail(dto.email());
+        cliente.setTelefone(dto.telefone());
+
+        return this.repository.save(cliente);
     }
 
 }
