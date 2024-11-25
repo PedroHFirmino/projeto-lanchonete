@@ -2,6 +2,7 @@ package pedro.firmino.lanches.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.pulsar.PulsarProperties;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pedro.firmino.lanches.dto.clienteRequestDto;
 import pedro.firmino.lanches.model.cliente;
@@ -19,14 +20,18 @@ public class clienteController {
     private clienteRepository repository;
 
     @GetMapping
-    public List<cliente> findAll() {
-        return this.repository.findAll();
+    public ResponseEntity<List<cliente>> findAll() {
+//        return this.repository.findAll();
+
+        return ResponseEntity.ok(this.repository.findAll());
     };
 
     @GetMapping("/{id}")
-    public cliente findById(@PathVariable Integer id) {
-        return this.repository.findById(id)
+    public ResponseEntity<cliente> findById(@PathVariable Integer id) {
+        cliente cliente = this.repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
+        return ResponseEntity.ok(cliente);
+
     }
 
     @PostMapping
@@ -53,11 +58,12 @@ public class clienteController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         cliente cliente = this.repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
 
         this.repository.delete(cliente);
+        return ResponseEntity.noContent().build();
 
     }
 
